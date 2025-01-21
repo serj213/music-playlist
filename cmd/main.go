@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/serj213/music-playlist/internal/app/config"
+	pgrepo "github.com/serj213/music-playlist/internal/app/repository/pgRepo"
+	"github.com/serj213/music-playlist/internal/app/service"
 	"github.com/serj213/music-playlist/internal/pkg/pg"
 )
 
@@ -39,7 +41,14 @@ func run()  error {
 		return err
 	}
 
-	_ = pgDb
+	log.Info("success connect database")
+
+	playlistRepo := pgrepo.NewPgRepo(pgDb)
+
+	playlistService := service.NewPlaylistService(playlistRepo)
+
+	
+	_ = playlistService
 
 	return nil
 }
