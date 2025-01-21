@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/serj213/music-playlist/internal/app/config"
+	"github.com/serj213/music-playlist/internal/pkg/pg"
 )
 
 const (
@@ -31,6 +32,14 @@ func run()  error {
 	log = log.With(slog.String("env", cfg.Env))
 
 	log.Info("logger enabled")
+
+	pgDb, err  := pg.Deal(cfg.DSN)
+
+	if err != nil {
+		return err
+	}
+
+	_ = pgDb
 
 	return nil
 }
