@@ -9,6 +9,7 @@ import (
 	"github.com/serj213/music-playlist/internal/app/domain"
 	"github.com/serj213/music-playlist/internal/app/repository/models"
 	"github.com/serj213/music-playlist/internal/pkg/pg"
+	"github.com/uptrace/bun"
 )
 
 
@@ -24,21 +25,43 @@ func NewPgRepo(db *pg.DB) *PgDb {
 }
 
 
-// разобраться с транзациями и реализовать с их помощью добавление песни и получение последней позиции в плейлисте
-
 func (r PgDb) AddSong(ctx context.Context, song domain.Song) (int64, error) {
-	songModel := domainToSong(song)
+	var result int64
 
-	res, err := r.db.NewInsert().Model(&songModel).Exec(ctx)
+	err := pg.HandleBunTransaction(ctx, func(tx bun.Tx) error {
+
+		position, err := r.GetLastPostion(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		songModel := domainToSong(song)
+
+		res, err := r.db.NewInsert().Model(&songModel).Exec(ctx)
+		if err != nil {
+			return fmt.Errorf("failed insert song: %w", err)
+		}
+
+		songId, err := res.LastInsertId()
+		if err != nil {
+			return fmt.Errorf("failed get insert id: %w", err)
+		}
+
+		if err := r.db.NewUpdate().Model((*models.Playlist)(nil)).Set("position = ?", position).Where("title = ?", song.Title()).Scan(ctx); err != nil {
+			return fmt.Errorf("failed update position: %w", err)
+		}
+
+		result = songId
+
+		return nil
+		}, r.db) 
+
 	if err != nil {
-		return 0, fmt.Errorf("failed insert song: %v", err)
+		return int64(0), err
 	}
 
-	songId, err := res.LastInsertId()
-	if err != nil {
-		return 0, fmt.Errorf("failed get id insert song: %v", err)
-	}
-	return songId, nil
+	return result, nil
 }
 
 func (r PgDb) GetSongById(ctx context.Context, id int) (domain.Song, error) {
@@ -107,4 +130,15 @@ func (r PgDb) GetPlaylist(ctx context.Context) ([]domain.Song, error){
 
 
 	return res, nil
+}
+
+func (r PgDb) GetLastPostion(ctx context.Context) (int, error) {
+
+	var position int
+	
+	if err := r.db.NewSelect().Model(&position).Column("position").Order("position DESC").Scan(ctx); err != nil {
+		return 0, fmt.Errorf("failed select last position: %w", err)
+	}
+
+	return position, nil
 }
