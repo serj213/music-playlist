@@ -6,7 +6,6 @@ type Song struct {
 	title string
 	artist string
 	duration int
-	file_path string
 	position int
 }
 
@@ -16,7 +15,6 @@ type NewSongData struct {
 	Title string
 	Artist string
 	Duration int
-	File_path string
 	Position int
 }
 
@@ -26,7 +24,6 @@ func NewSong(data NewSongData) Song {
 		title: data.Title,
 		artist: data.Artist,
 		duration: data.Duration,
-		file_path: data.File_path,
 		position: data.Position,
 	}
 }
@@ -45,10 +42,6 @@ func (p *Song) Artist() string {
 
 func (p *Song) Duration() int {
 	return p.duration
-}
-
-func (p *Song) FilePath() string {
-	return p.file_path
 }
 
 func (p *Song) Position() int {

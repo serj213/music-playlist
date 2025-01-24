@@ -13,7 +13,6 @@ func domainToSong(song domain.Song) *models.Playlist {
 		Title: song.Title(),
 		Artist: song.Artist(),
 		Duration: song.Duration(),
-		File_path: song.FilePath(),
 	}
 }
 
@@ -23,6 +22,5 @@ func songToDomain(data models.Playlist) (domain.Song, error) {
 		Title: data.Title,
 		Artist: data.Artist,
 		Duration: data.Duration,
-		File_path: data.File_path,
 	}),nil
 }

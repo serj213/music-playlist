@@ -17,12 +17,14 @@ type PgDb struct {
 	db *pg.DB
 }
 
-
 func NewPgRepo(db *pg.DB) *PgDb {
 	return &PgDb{
 		db: db,
 	}
 }
+
+
+// разобраться с транзациями и реализовать с их помощью добавление песни и получение последней позиции в плейлисте
 
 func (r PgDb) AddSong(ctx context.Context, song domain.Song) (int64, error) {
 	songModel := domainToSong(song)

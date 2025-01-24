@@ -8,10 +8,10 @@ import (
 
 
 type PlaylistService struct {
-	repo PlaylistRepository
+	repo playlistRepository
 }
 
-func NewPlaylistService(repo PlaylistRepository) PlaylistService {
+func NewPlaylistService(repo playlistRepository) PlaylistService {
 	return PlaylistService{
 		repo: repo,
 	}

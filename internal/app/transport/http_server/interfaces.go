@@ -1,4 +1,4 @@
-package service
+package httpserver
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 )
 
 
-type playlistRepository interface {
+type playlistService interface {
 	AddSong(ctx context.Context, song domain.Song) (int64, error)
 	GetSongById(ctx context.Context, id int) (domain.Song, error)
 	GetSongOnPosition(ctx context.Context, position int) (domain.Song, error)

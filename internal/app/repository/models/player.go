@@ -9,5 +9,5 @@ type Playlist struct {
 	Title string
 	Artist string
 	Duration int
-	File_path string
+	Position int
 }

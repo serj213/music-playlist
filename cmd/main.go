@@ -3,11 +3,14 @@ package main
 import (
 	"log"
 	"log/slog"
+	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
 	"github.com/serj213/music-playlist/internal/app/config"
 	pgrepo "github.com/serj213/music-playlist/internal/app/repository/pgRepo"
 	"github.com/serj213/music-playlist/internal/app/service"
+	httpserver "github.com/serj213/music-playlist/internal/app/transport/http_server"
 	"github.com/serj213/music-playlist/internal/pkg/pg"
 )
 
@@ -46,9 +49,17 @@ func run()  error {
 	playlistRepo := pgrepo.NewPgRepo(pgDb)
 
 	playlistService := service.NewPlaylistService(playlistRepo)
-
 	
-	_ = playlistService
+	httpServer := httpserver.NewHttpServer(playlistService)
+
+	rounter := mux.NewRouter()
+
+	log.Info("init router")
+	rounter.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("playlist API"))
+	})
+	
+	_ = httpServer
 
 	return nil
 }
