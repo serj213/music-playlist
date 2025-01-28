@@ -1,4 +1,4 @@
 env: local
 http_address: 'localhost:8083'
 storage_playlist: 'assets/playlist'
-dsn: '/path/path'
+DSN: postgres://postgres:root@localhost:5433/playlist?sslmode=disable

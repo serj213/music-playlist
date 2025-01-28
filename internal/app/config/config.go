@@ -12,7 +12,7 @@ type Config struct {
 	Env string `yaml:"env" env-required:"true"`
 	HttpAddress string `yaml:"http_address" env-required:"true"`
 	StoragePlaylist string `yaml:"storage_playlist" env-required:"storage_playlist"`
-	DSN string `yaml:"dsn" env-required:"true"`
+	DSN string `yaml:"DSN" env-required:"true"`
 }
 
 
