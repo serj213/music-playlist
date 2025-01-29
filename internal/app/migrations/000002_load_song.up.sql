@@ -1,0 +1,1 @@
+INSERT INTO song (title, artist, duration, position) VALUES ("Роза цвела", "noname", "3:40", 1);
