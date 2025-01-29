@@ -13,6 +13,7 @@ type Song struct {
 	Title string `bun:",notnull"`
 	Artist string `bun:",notnull"`
 	Duration string `bun:",notnull"`
+	Position int
 	Created_at time.Time `bun:",nullzero"`
 	Updated_at time.Time `bun:",nullzero"`
 }

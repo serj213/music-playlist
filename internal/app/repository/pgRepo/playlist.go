@@ -2,6 +2,8 @@ package pgrepo
 
 import (
 	"context"
+
+	"github.com/serj213/music-playlist/internal/app/domain"
 )
 
 type PlaylistRepo  struct {
@@ -15,6 +17,8 @@ func NewPlaylistRepo(db *PgDb) *PlaylistRepo {
 	}
 }
 
-func (r PlaylistRepo) CreatePlaylist(ctx context.Context) {
+func (r PlaylistRepo) CreatePlaylist(ctx context.Context, playlist domain.Playlist) (int, error) {
+
+	// playlistModel
 
 }

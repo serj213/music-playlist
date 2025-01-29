@@ -5,7 +5,7 @@ type Song struct {
 	id int
 	title string
 	artist string
-	duration int
+	duration string
 	position int
 }
 
@@ -14,7 +14,7 @@ type NewSongData struct {
 	Id int
 	Title string
 	Artist string
-	Duration int
+	Duration string
 	Position int
 }
 
@@ -40,7 +40,7 @@ func (p Song) Artist() string {
 	return p.artist
 }
 
-func (p Song) Duration() int {
+func (p Song) Duration() string {
 	return p.duration
 }
 
