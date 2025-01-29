@@ -28,22 +28,22 @@ func NewSong(data NewSongData) Song {
 	}
 }
 
-func (p *Song) ID() int {
+func (p Song) ID() int {
 	return p.id
 }
 
-func (p *Song) Title() string {
+func (p Song) Title() string {
 	return p.title
 }
 
-func (p *Song) Artist() string {
+func (p Song) Artist() string {
 	return p.artist
 }
 
-func (p *Song) Duration() int {
+func (p Song) Duration() int {
 	return p.duration
 }
 
-func (p *Song) Position() int {
+func (p Song) Position() int {
 	return p.position
 }
