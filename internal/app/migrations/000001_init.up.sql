@@ -10,7 +10,6 @@ CREATE TABLE song (
     title text NOT NULL,
     artist text NOT NULL,
     duration text NOT NULL,
-    position int NOT NULL UNIQUE
 );
 
 
