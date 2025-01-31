@@ -4,35 +4,34 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/uptrace/bun"
+	"github.com/jackc/pgx/v5"
 )
 
 
-type BunTransactionFn func(tx bun.Tx) error
+type PgTransactionFn func(pgTX pgx.Tx) error 
 
+func HandlePgTransaction(ctx context.Context, pgTxFn PgTransactionFn) error {
+	var pgTx pgx.Tx
 
-
-func HandleBunTransaction(ctx context.Context, bunTx BunTransactionFn, db *DB) (err error) {
-
-
-	tx, err := db.BeginTx(ctx,nil)
+	_, err := pgTx.Begin(ctx)
 	if err != nil {
-		return fmt.Errorf("failed start transaction: %w", err)
+		return fmt.Errorf("Failed begin transaction: %w", err)
 	}
 
-	err = bunTx(tx)
-	if err != nil {
-		errRollback := tx.Rollback()
-		if errRollback != nil {
-			return fmt.Errorf("failed executing transaction: %w: failed rollbalck transaction: %w", err, errRollback)
+	errFn := pgTxFn(pgTx)
+
+	if errFn != nil {
+		if err := pgTx.Rollback(ctx); err != nil {
+			return fmt.Errorf("failed rollback transaction: %w", err)
 		}
 
-		return fmt.Errorf("failed executing transaction: %w", err)
+		return fmt.Errorf("failed executing transaction: %w", errFn)
 	}
-	
-	if err = tx.Commit();  err != nil {
+
+	if err := pgTx.Commit(ctx); err != nil {
 		return fmt.Errorf("failed commit transaction: %w", err)
 	}
 
 	return nil
+
 }

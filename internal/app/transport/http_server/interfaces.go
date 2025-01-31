@@ -8,8 +8,5 @@ import (
 
 
 type playlistService interface {
-	AddSong(ctx context.Context, song domain.Song) (int64, error)
-	GetSongById(ctx context.Context, id int) (domain.Song, error)
-	GetSongOnPosition(ctx context.Context, position int) (domain.Song, error)
-	GetPlaylist(ctx context.Context) ([]domain.Song, error)
+	CreatePlaylist(ctx context.Context, playlist domain.Playlist) (domain.Playlist, error)
 }

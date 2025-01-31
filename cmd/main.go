@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"log/slog"
 	"net/http"
@@ -40,13 +42,15 @@ func run()  error {
 
 	pgDb, err  := pg.Deal(cfg.DSN)
 
+	defer pgDb.Close(context.Background())
+
 	if err != nil {
 		return err
 	}
 
 	log.Info("success connect database")
 
-	playlistRepo := pgrepo.NewPgRepo(pgDb)
+	playlistRepo := pgrepo.NewPlaylistRepo(pgDb)
 
 	playlistService := service.NewPlaylistService(playlistRepo)
 	
@@ -58,8 +62,21 @@ func run()  error {
 	rounter.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("playlist API"))
 	})
-	
-	_ = httpServer
+
+
+	rounter.HandleFunc("/create", httpServer.CreatePlaylist)
+
+
+	srv := &http.Server{
+		Handler: rounter,
+		Addr: cfg.HttpAddress,
+	}
+
+	log.Info("server starting...")
+
+	if err := srv.ListenAndServe();err != nil {
+		return fmt.Errorf("failed starting server: %w", err)
+	}
 
 	return nil
 }

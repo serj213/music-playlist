@@ -6,10 +6,13 @@ import (
 )
 
 
-func BadRequest(slug string, err error, w http.ResponseWriter, r *http.Request) {
+func BadRequest(slug string, w http.ResponseWriter, r *http.Request) {
 	httpRespondWithErr(slug, w, r, "bad request", http.StatusBadRequest)
 }
 
+func InternalServer(slug string, w http.ResponseWriter, r *http.Request) {
+	httpRespondWithErr(slug, w, r, "internal server", http.StatusInternalServerError)
+}
 
 func httpRespondWithErr(slug string, w http.ResponseWriter, r *http.Request, msg string, status int) {
 

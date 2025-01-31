@@ -9,13 +9,11 @@ type Playlist struct {
 }
 
 type NewPlaylistData struct {
-	Id int
 	Title string
 }
 
 func NewPlaylist(data NewPlaylistData) (Playlist, error) {
 	return Playlist{
-		id: data.Id,
 		title: data.Title,
 	}, nil
 }

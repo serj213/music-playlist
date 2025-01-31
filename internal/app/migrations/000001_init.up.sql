@@ -9,7 +9,7 @@ CREATE TABLE song (
     id serial NOT NULL PRIMARY KEY,
     title text NOT NULL,
     artist text NOT NULL,
-    duration text NOT NULL,
+    duration int NOT NULL
 );
 
 

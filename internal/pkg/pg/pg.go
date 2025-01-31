@@ -1,20 +1,15 @@
 package pg
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	"time"
 
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/dialect/pgdialect"
-	"github.com/uptrace/bun/driver/pgdriver"
-	_ "github.com/uptrace/bun/driver/pgdriver"
-	"github.com/uptrace/bun/extra/bundebug"
+	"github.com/jackc/pgx/v5"
 )
 
 
 type DB struct {
-	*bun.DB
+	*pgx.Conn
 }
 
 
@@ -24,25 +19,11 @@ func Deal(dsn string) (*DB, error){
 		return nil, fmt.Errorf("dsn empty \n")
 	}
 
-	pgDb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	conn, err := pgx.Connect(context.Background(), dsn)
 
-	pgDb.SetConnMaxIdleTime(10)
-	pgDb.SetMaxIdleConns(10)
-	pgDb.SetConnMaxLifetime(1 * time.Minute)
-
-	if err := pgDb.Ping(); err != nil {
-		return nil, fmt.Errorf("failed ping pg: %v", err)
+	if err != nil {
+		return nil, fmt.Errorf("failed connect database postgres: %w", err)
 	}
 
-	db := bun.NewDB(pgDb, pgdialect.New())
-
-	db.AddQueryHook(bundebug.NewQueryHook(
-		bundebug.WithVerbose(true),
-		bundebug.FromEnv("BUNDEBUG"),
-	))
-
-	return &DB{
-		DB: db,
-	}, nil
-	
+	return &DB{Conn: conn}, nil
 }

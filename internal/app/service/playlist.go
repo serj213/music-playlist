@@ -17,19 +17,6 @@ func NewPlaylistService(repo playlistRepository) PlaylistService {
 	}
 }
 
-func (p PlaylistService) AddSong(ctx context.Context, song domain.Song) (int64, error) {
-	return p.repo.AddSong(ctx, song)
-}
-
-
-func (p PlaylistService) GetSongById(ctx context.Context, id int) (domain.Song, error) {
-	return p.repo.GetSongById(ctx, id)
-}
-
-func (p PlaylistService) GetSongOnPosition(ctx context.Context, position int) (domain.Song, error) {
-	return p.repo.GetSongOnPosition(ctx, position)
-}
-
-func (p PlaylistService) GetPlaylist(ctx context.Context) ([]domain.Song, error) {
-	return p.repo.GetPlaylist(ctx)
+func (p PlaylistService) CreatePlaylist(ctx context.Context, playlist domain.Playlist) (domain.Playlist, error) {
+	return p.repo.CreatePlaylist(ctx, playlist)
 }

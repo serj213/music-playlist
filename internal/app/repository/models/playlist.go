@@ -2,15 +2,12 @@ package models
 
 import (
 	"time"
-
-	"github.com/uptrace/bun"
 )
 
 
 type Playlist struct {
-	bun.BaseModel `bun:"table:playlist"`
-	Id int `bun:",pk,autoincrement"`
+	Id int 
 	Title string
-	Created_at time.Time `bun:",nullzero"`
-	Updated_at time.Time `bun:",nullzero"`
+	Created_at time.Time 
+	Updated_at time.Time 
 }
