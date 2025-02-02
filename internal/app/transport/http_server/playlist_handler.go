@@ -38,7 +38,7 @@ func (p HttpServer) CreatePlaylist(w http.ResponseWriter, r *http.Request) {
 		Playlist: playlistRes{
 			Id: playlist.ID(),
 			Title: playlist.Title(),
-		},
+		}, 
 	}, w, r)
 
 }

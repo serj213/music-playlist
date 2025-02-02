@@ -13,5 +13,5 @@ type playlistRepository interface {
 
 
 type songRepository interface {
-	AddSong(ctx context.Context, song domain.Song) (int, error)
+	AddSong(ctx context.Context, song domain.Song, playlistId int) (int, error)
 }	

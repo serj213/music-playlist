@@ -10,10 +10,10 @@ import (
 
 type PgTransactionFn func(pgTX pgx.Tx) error 
 
-func HandlePgTransaction(ctx context.Context, pgTxFn PgTransactionFn) error {
+func HandlePgTransaction(ctx context.Context, pgTxFn PgTransactionFn, db *DB) error {
 	var pgTx pgx.Tx
 
-	_, err := pgTx.Begin(ctx)
+	tx, err := db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return fmt.Errorf("Failed begin transaction: %w", err)
 	}
@@ -21,14 +21,14 @@ func HandlePgTransaction(ctx context.Context, pgTxFn PgTransactionFn) error {
 	errFn := pgTxFn(pgTx)
 
 	if errFn != nil {
-		if err := pgTx.Rollback(ctx); err != nil {
+		if err := tx.Rollback(ctx); err != nil {
 			return fmt.Errorf("failed rollback transaction: %w", err)
 		}
 
 		return fmt.Errorf("failed executing transaction: %w", errFn)
 	}
 
-	if err := pgTx.Commit(ctx); err != nil {
+	if err := tx.Commit(ctx); err != nil {
 		return fmt.Errorf("failed commit transaction: %w", err)
 	}
 

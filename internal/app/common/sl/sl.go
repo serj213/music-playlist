@@ -5,9 +5,9 @@ import (
 )
 
 
-func Error(msg string) slog.Attr {
+func Error(err error) slog.Attr {
 	return slog.Attr{
 		Key: "error",
-		Value: slog.StringValue(msg),
+		Value: slog.StringValue(err.Error()),
 	}
 }

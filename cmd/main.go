@@ -51,24 +51,27 @@ func run()  error {
 	log.Info("success connect database")
 
 	playlistRepo := pgrepo.NewPlaylistRepo(pgDb)
+	songRepo := pgrepo.NewSongRepo(pgDb)
 
 	playlistService := service.NewPlaylistService(playlistRepo)
-	
-	httpServer := httpserver.NewHttpServer(playlistService)
+	songService := service.NewSongService(log, songRepo)
 
-	rounter := mux.NewRouter()
+	httpServer := httpserver.NewHttpServer(log, playlistService, songService)
+
+	router := mux.NewRouter()
 
 	log.Info("init router")
-	rounter.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("playlist API"))
 	})
 
 
-	rounter.HandleFunc("/create", httpServer.CreatePlaylist)
+	router.HandleFunc("/create", httpServer.CreatePlaylist)
+	router.HandleFunc("/add", httpServer.AddSong)
 
 
 	srv := &http.Server{
-		Handler: rounter,
+		Handler: router,
 		Addr: cfg.HttpAddress,
 	}
 

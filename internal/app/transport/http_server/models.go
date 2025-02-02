@@ -8,6 +8,10 @@ type SongRequest struct {
 	Duration int `json:"duration"`
 }
 
+type AddSongResponse struct {
+	Id int `json:"song_id"`
+}
+
 type PlaylistRequest struct {
 	Title string `json:"title"`
 }
@@ -23,7 +27,16 @@ type PlaylistResponse struct {
 	Playlist playlistRes `json:"playlist"`
 }
 
-func (s *SongRequest) Validate() error {
+
+
+type AddSongRequest struct {
+	Title string `json:"title"`
+	Artist string `json:"artist"`
+	Duration int `json:"duration"`
+}
+
+
+func (s *AddSongRequest) Validate() error {
 	if s.Title == ""{
 		return fmt.Errorf("title is empty")
 	}

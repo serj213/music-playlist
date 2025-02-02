@@ -7,3 +7,11 @@ func playlistToDomain(newPlaylist PlaylistRequest) (domain.Playlist, error) {
 		Title: newPlaylist.Title,
 	})
 }
+
+func songToDomain(song AddSongRequest)(domain.Song, error) {
+	return domain.NewSong(domain.NewSongData{
+		Title: song.Title,
+		Artist: song.Artist,
+		Duration: song.Duration,
+	}),nil
+}
